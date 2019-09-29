@@ -1,13 +1,9 @@
-import React from 'react';
-import '../index.css';
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
+import React from 'react';
+import '../index.css';
 
 export default class MoveHistory extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     NoDataComponent = (props) => {
         const {
@@ -60,14 +56,18 @@ export default class MoveHistory extends React.Component {
         }, {
             Header: 'Reset',
             Cell: (cellInfo) =>
-                <button style={{width:'60%', height: '105%'}}
-                                        onClick={() => this.props.resetTable(cellInfo.index)}>
+                <button type="button" style={{width:'60%', height: '105%'}}
+                                        onClick={() => {
+                                            const {resetTable} = this.props;
+                                            resetTable(cellInfo.index);
+                                        }}>
                     {'\u21BB'}
                 </button>,
             sortable: false,
             filterable: false,
         }];
 
+        const {data, currentSelected, setCurrentSelected} = this.props;
         return (
             <div className="move-history">
 
@@ -76,9 +76,9 @@ export default class MoveHistory extends React.Component {
                 </p>
 
                 <ReactTable style={{height: '410px', border: '1px solid #c79e71'}}
-                            data={this.props.data}
+                            data={data}
                             columns={columns}
-                            noDataText={''}
+                            noDataText=""
                             defaultPageSize={400}
                             NoDataComponent={this.NoDataComponent}
                             showPagination={false}
@@ -88,17 +88,17 @@ export default class MoveHistory extends React.Component {
                                 if (typeof rowInfo !== "undefined") {
                                     return {
                                         onClick: (e, handleOriginal) => {
-                                            this.props.setCurrentSelected(rowInfo.index);
+                                            setCurrentSelected(rowInfo.index);
                                             if (handleOriginal) {
                                                 handleOriginal()
                                             }
                                         },
                                         style: {
-                                            background: rowInfo.index === this.props.currentSelected ? '#eca75b' : '',
-                                            color: rowInfo.index === this.props.currentSelected ? 'white' : ''
+                                            background: rowInfo.index === currentSelected ? '#eca75b' : '',
+                                            color: rowInfo.index === currentSelected ? 'white' : ''
                                         },
                                     }
-                                } else {
+                                } 
                                     return {
                                         onClick: (e, handleOriginal) => {
                                             if (handleOriginal) {
@@ -110,7 +110,7 @@ export default class MoveHistory extends React.Component {
                                             color: 'black'
                                         },
                                     }
-                                }
+                                
                             }}
                 />
             </div>

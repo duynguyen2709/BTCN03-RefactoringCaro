@@ -1,4 +1,17 @@
-import {NO_OF_ROW, NO_OF_COL, NUM_TO_WIN} from "../Game";
+import {NO_OF_ROW, NO_OF_COL, NUM_TO_WIN} from "./Constants";
+
+function highlight(arr, currentSymbol){
+    let color = null;
+    if (currentSymbol === "X")
+        color = "#fd4138";
+    else
+        color = "#ff8d00";
+
+    for (let i=0; i< arr.length; i++){
+        const key = `${arr[i].row}_${arr[i].col}`;
+        document.getElementById(key).style.backgroundColor = color;
+    }
+}
 
 function checkWinCondition(squares, i, j) {
 
@@ -24,8 +37,8 @@ function checkWinCondition(squares, i, j) {
 
         if (res >= NUM_TO_WIN) {
             let startIndex = endIndex;
-            let row = squares[i];
-            let winArr = [];
+            const row = squares[i];
+            const winArr = [];
             while (row[startIndex] === currentSymbol) {
                 startIndex--;
 
@@ -46,7 +59,7 @@ function checkWinCondition(squares, i, j) {
             if (row[startIndex - 1] == null || row[endIndex + 1] == null)
                 return winArr;
 
-            //block head & tail
+            // block head & tail
             if (row[startIndex - 1] === row[endIndex + 1] && row[startIndex - 1] !== currentSymbol)
                 return null;
 
@@ -75,7 +88,7 @@ function checkWinCondition(squares, i, j) {
 
         if (res >= NUM_TO_WIN) {
             let startIndex = endIndex;
-            let winArr = [];
+            const winArr = [];
 
             while (squares[startIndex][j] === currentSymbol) {
                 startIndex--;
@@ -98,7 +111,7 @@ function checkWinCondition(squares, i, j) {
             if (squares[startIndex - 1][j] == null || squares[endIndex + 1][j] == null)
                 return winArr;
 
-            //block head & tail
+            // block head & tail
             if (squares[startIndex - 1][j] === squares[endIndex + 1][j] && squares[startIndex - 1][j] !== currentSymbol)
                 return null;
 
@@ -138,8 +151,8 @@ function checkWinCondition(squares, i, j) {
         }
 
         if (res >= NUM_TO_WIN) {
-            let winArr = [];
-            let startIndex = [...endIndex];
+            const winArr = [];
+            const startIndex = [...endIndex];
 
             while (squares[startIndex[0]][startIndex[1]] === currentSymbol) {
                 startIndex[0]--;
@@ -165,7 +178,7 @@ function checkWinCondition(squares, i, j) {
             if (squares[startIndex[0] - 1][startIndex[1] - 1] == null || squares[endIndex[0] + 1][endIndex[1] + 1] == null)
                 return winArr;
 
-            //block head & tail
+            // block head & tail
             if (squares[startIndex[0] - 1][startIndex[1] - 1] === squares[endIndex[0] + 1][endIndex[1] + 1]
                 && squares[startIndex[0] - 1][startIndex[1] - 1] !== currentSymbol)
                 return null;
@@ -206,8 +219,8 @@ function checkWinCondition(squares, i, j) {
         }
 
         if (res >= NUM_TO_WIN) {
-            let winArr = [];
-            let startIndex = [...endIndex];
+            const winArr = [];
+            const startIndex = [...endIndex];
 
             while (squares[startIndex[0]][startIndex[1]] === currentSymbol) {
                 startIndex[0]--;
@@ -234,7 +247,7 @@ function checkWinCondition(squares, i, j) {
             if (squares[startIndex[0] - 1][startIndex[1] + 1] == null || squares[endIndex[0] + 1][endIndex[1] - 1] == null)
                 return winArr;
 
-            //block head & tail
+            // block head & tail
             if (squares[startIndex[0] - 1][startIndex[1] + 1] === squares[endIndex[0] + 1][endIndex[1] - 1]
                 && squares[startIndex[0] - 1][startIndex[1] + 1] !== currentSymbol)
                 return null;
@@ -272,21 +285,7 @@ function checkWinCondition(squares, i, j) {
     return null;
 }
 
-function highlight(arr, currentSymbol){
-    let color = null;
-    if (currentSymbol === "X")
-        color = "#fd4138";
-    else
-        color = "#ff8d00";
-
-    for (let cell of arr){
-        const key = cell.row + "_" + cell.col;
-        document.getElementById(key).style.backgroundColor = color;
-    }
-}
-
 function isBoardFull(totalChecked) {
-
     return totalChecked >= NO_OF_ROW * NO_OF_COL;
 }
 

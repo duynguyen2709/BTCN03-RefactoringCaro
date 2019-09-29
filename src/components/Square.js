@@ -3,12 +3,12 @@ import '../index.css';
 
 export default  function Square({ id, value, onClick }) {
 
-    const text_color = value === "X" ?  "blue" : "red";
+    const textColor = value === "X" ?  "blue" : "red";
 
     return (
-        <button className="square" id={id} onClick={onClick}>
+        <button type="button" className="square" id={id} onClick={onClick}>
             <span style={{
-                color: text_color
+                color: textColor
             }}>
                 {value}
             </span>

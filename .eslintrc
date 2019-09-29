@@ -8,6 +8,8 @@
         "extensions": [".js", ".jsx"]
       }
     ],
+    "no-plusplus": "off",
+    "react/destructuring-assignment": "off",
     "react/prop-types": 0,
     "no-underscore-dangle": 0,
     "import/imports-first": ["error", "absolute-first"],
