@@ -2,7 +2,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 40px;
+  margin: 30px;
   background: #ffce8f;
 }
 
@@ -49,7 +49,7 @@ ol, ul {
   display: flex;
   flex-direction: row;
   justify-content: start;
-  margin-left: 150px;
+  margin-left: 100px;
 }
 
 .game {
@@ -66,14 +66,14 @@ ol, ul {
 .game-info {
   font-size: 48px;
   color: #424242;
-  margin: auto 50px;
+  margin: -50px auto;
   text-align: center;
   width: 400px;
 }
 
 .restart-button {
-  margin-top: 20px;
   text-align: center;
+  padding-top: 20px;
 }
 
 .restart:hover {
@@ -101,4 +101,12 @@ ol, ul {
   width: 40%;
   text-align: center;
   border-radius: 4px;
+}
+
+.move-history {
+  font-size: 14px;
+  color: #424242;
+  margin: auto 50px;
+  text-align: center;
+  width: 500px;
 }

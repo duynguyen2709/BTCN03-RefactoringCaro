@@ -25,6 +25,7 @@ function checkWinCondition(squares, i, j) {
         if (res >= NUM_TO_WIN) {
             let startIndex = endIndex;
             let row = squares[i];
+            let winArr = [];
             while (row[startIndex] === currentSymbol) {
                 startIndex--;
 
@@ -33,20 +34,26 @@ function checkWinCondition(squares, i, j) {
 
             startIndex++;
 
+            for (let winInd = startIndex; winInd <= endIndex; winInd++){
+                winArr.push({row: i, col: winInd});
+            }
+
             // at start or end square
             if (startIndex === 0 || endIndex === NO_OF_COL - 1)
-                return true;
+                return winArr;
+
             // empty next square
             if (row[startIndex - 1] == null || row[endIndex + 1] == null)
-                return true;
+                return winArr;
+
             //block head & tail
             if (row[startIndex - 1] === row[endIndex + 1] && row[startIndex - 1] !== currentSymbol)
-                return false;
+                return null;
 
-            return true;
+            return winArr;
         }
 
-        return false;
+        return null;
     }
 
     function checkColumn() {
@@ -68,6 +75,7 @@ function checkWinCondition(squares, i, j) {
 
         if (res >= NUM_TO_WIN) {
             let startIndex = endIndex;
+            let winArr = [];
 
             while (squares[startIndex][j] === currentSymbol) {
                 startIndex--;
@@ -78,22 +86,26 @@ function checkWinCondition(squares, i, j) {
 
             startIndex++;
 
+            for (let winInd = startIndex; winInd <= endIndex; winInd++){
+                winArr.push({row: winInd, col: j});
+            }
+
             // at start or end square
             if (startIndex === 0 || endIndex === NO_OF_ROW - 1)
-                return true;
+                return winArr;
 
             // empty next square
             if (squares[startIndex - 1][j] == null || squares[endIndex + 1][j] == null)
-                return true;
+                return winArr;
 
             //block head & tail
             if (squares[startIndex - 1][j] === squares[endIndex + 1][j] && squares[startIndex - 1][j] !== currentSymbol)
-                return false;
+                return null;
 
-            return true;
+            return winArr;
         }
 
-        return false;
+        return null;
     }
 
     function checkDiag() {
@@ -126,6 +138,7 @@ function checkWinCondition(squares, i, j) {
         }
 
         if (res >= NUM_TO_WIN) {
+            let winArr = [];
             let startIndex = [...endIndex];
 
             while (squares[startIndex[0]][startIndex[1]] === currentSymbol) {
@@ -138,23 +151,29 @@ function checkWinCondition(squares, i, j) {
             startIndex[0]++;
             startIndex[1]++;
 
+            for (let winInd = startIndex[0], winInd2 = startIndex[1];
+                 winInd <= endIndex[0] && winInd2 <= endIndex[1];
+                 winInd++ && winInd2++){
+                winArr.push({row: winInd, col: winInd2})
+            }
+
             // at start or end square
             if (startIndex[0] === 0 || startIndex[1] === 0 || endIndex[0] === NO_OF_ROW - 1 || endIndex[1] === NO_OF_ROW - 1)
-                return true;
+                return winArr;
 
             // empty next square
             if (squares[startIndex[0] - 1][startIndex[1] - 1] == null || squares[endIndex[0] + 1][endIndex[1] + 1] == null)
-                return true;
+                return winArr;
 
             //block head & tail
             if (squares[startIndex[0] - 1][startIndex[1] - 1] === squares[endIndex[0] + 1][endIndex[1] + 1]
                 && squares[startIndex[0] - 1][startIndex[1] - 1] !== currentSymbol)
-                return false;
+                return null;
 
-            return true;
+            return winArr;
         }
 
-        return false;
+        return null;
     }
 
     function checkAntiDiag() {
@@ -187,6 +206,7 @@ function checkWinCondition(squares, i, j) {
         }
 
         if (res >= NUM_TO_WIN) {
+            let winArr = [];
             let startIndex = [...endIndex];
 
             while (squares[startIndex[0]][startIndex[1]] === currentSymbol) {
@@ -199,36 +219,70 @@ function checkWinCondition(squares, i, j) {
             startIndex[0]++;
             startIndex[1]--;
 
+            for (let winInd = startIndex[0], winInd2 = startIndex[1];
+                 winInd <= endIndex[0] && winInd2 >= endIndex[1];
+                 winInd++ && winInd2--){
+                winArr.push({row: winInd, col: winInd2})
+            }
+
             // at start or end square
             if (startIndex[0] === 0 || startIndex[1] === NO_OF_COL - 1 ||
                 endIndex[0] === NO_OF_ROW - 1 || endIndex[1] === 0)
-                return true;
+                return winArr;
 
             // empty next square
             if (squares[startIndex[0] - 1][startIndex[1] + 1] == null || squares[endIndex[0] + 1][endIndex[1] - 1] == null)
-                return true;
+                return winArr;
 
             //block head & tail
             if (squares[startIndex[0] - 1][startIndex[1] + 1] === squares[endIndex[0] + 1][endIndex[1] - 1]
                 && squares[startIndex[0] - 1][startIndex[1] + 1] !== currentSymbol)
-                return false;
+                return null;
 
-            return true;
+            return winArr;
         }
 
-        return false;
+        return null;
     }
 
     const nRow = checkRow();
-    const nCol = checkColumn();
-    const nDiag = checkDiag();
-    const nAntiDiag = checkAntiDiag();
-
-    if (nRow || nCol || nDiag || nAntiDiag)
+    if (nRow != null){
+        highlight(nRow, currentSymbol);
         return currentSymbol;
+    }
+
+    const nCol = checkColumn();
+    if (nCol != null){
+        highlight(nCol, currentSymbol);
+        return currentSymbol;
+    }
+
+    const nDiag = checkDiag();
+    if (nDiag != null){
+        highlight(nDiag, currentSymbol);
+        return currentSymbol;
+    }
+
+    const nAntiDiag = checkAntiDiag();
+    if (nAntiDiag != null){
+        highlight(nAntiDiag, currentSymbol);
+        return currentSymbol;
+    }
 
     return null;
+}
 
+function highlight(arr, currentSymbol){
+    let color = null;
+    if (currentSymbol === "X")
+        color = "#fd4138";
+    else
+        color = "#ff8d00";
+
+    for (let cell of arr){
+        const key = cell.row + "_" + cell.col;
+        document.getElementById(key).style.backgroundColor = color;
+    }
 }
 
 function isBoardFull(totalChecked) {

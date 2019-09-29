@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
 import RestartButton from './components/RestartButton';
+import MoveHistory from './components/MoveHistory';
 import Square from './components/Square';
 import {checkWinCondition, isBoardFull} from "./utils/GameCheckUtil";
 
@@ -21,13 +22,19 @@ class Game extends React.Component {
             squares: Array(NO_OF_ROW).fill(Array(NO_OF_COL).fill(null)),
             isXNext: true,
             totalChecked: 0,
-            win: false
+            win: false,
+            historyMoves: [],
+            historySquares: [],
+            currentSelected: -1,
+            currentTurn: 0
         };
 
+        this.resetTable = this.resetTable.bind(this);
         this.handleClickRestartButton = this.handleClickRestartButton.bind(this);
         this.handleOnClickSquare = this.handleOnClickSquare.bind(this);
         this.getStatus = this.getStatus.bind(this);
         this.renderBoard = this.renderBoard.bind(this);
+        this.setCurrentSelected = this.setCurrentSelected.bind(this);
 
         this.init();
     }
@@ -39,13 +46,35 @@ class Game extends React.Component {
         }
     }
 
+    resetTable(index){
+        this.setState({
+            squares: this.state.historySquares[index],
+            isXNext: index % 2 === 1,
+            currentTurn: index + 1,
+            currentSelected: index,
+            totalChecked: index + 1
+        });
+    }
+
     handleClickRestartButton() {
         this.setState({
             squares: Array(NO_OF_ROW).fill(Array(NO_OF_COL).fill(null)),
             isXNext: true,
             totalChecked: 0,
-            win: false
-        })
+            win: false,
+            historyMoves: [],
+            historySquares: [],
+            currentSelected: -1,
+            currentTurn: 0
+        });
+
+        const rows = document.getElementsByClassName("rt-tr-group");
+        rows[0].scrollIntoView(false);
+
+        for (let cell of document.getElementsByClassName("square")){
+            cell.style.backgroundColor = "#eff1bc";
+        }
+
     }
 
     getStatus(color = 'red') {
@@ -67,17 +96,44 @@ class Game extends React.Component {
             return;
         }
 
+        if (this.state.currentTurn < this.state.historySquares.length){
+            this.state.historySquares = this.state.historySquares.slice(0, this.state.currentTurn);
+            this.state.historyMoves = this.state.historyMoves.slice(0, this.state.currentTurn);
+        }
+
         const currentSymbol = this.state.isXNext ? "X" : "O";
+
+        const elementClicked = {
+            id: this.state.totalChecked + 1,
+            symbol: currentSymbol,
+            row: i + 1,
+            column: j + 1
+        };
+
+        this.state.historyMoves.push(elementClicked);
 
         const newArray = this.state.squares.map(function (arr) {
             return arr.slice();
         });
         newArray[i][j] = currentSymbol;
 
+        this.state.historySquares.push(newArray);
+
         this.setState({
             squares: newArray,
             isXNext: !this.state.isXNext,
-            totalChecked: this.state.totalChecked + 1
+            totalChecked: this.state.totalChecked + 1,
+            historyMoves: this.state.historyMoves,
+            historySquares: this.state.historySquares,
+            currentSelected: this.state.totalChecked,
+            currentTurn: this.state.currentTurn + 1,
+        },() => {
+            const rows = document.getElementsByClassName("rt-tr-group");
+            if (this.state.currentSelected > 10) {
+                rows[this.state.currentSelected + 1].scrollIntoView(false);
+            } else {
+                rows[0].scrollIntoView(false);
+            }
         });
 
         const check = checkWinCondition(newArray, i, j);
@@ -89,6 +145,12 @@ class Game extends React.Component {
         }
     }
 
+    setCurrentSelected(select){
+        this.setState({
+            currentSelected: select
+        })
+    }
+
     renderBoard() {
         return this.BASE_ROW.map((r) => (
 
@@ -98,7 +160,7 @@ class Game extends React.Component {
                 {this.BASE_COL.map((c) =>
                     (<React.Fragment key={"c" + c}>
 
-                        <Square value={this.state.squares[r][c]} onClick={() => this.handleOnClickSquare(r, c)}/>
+                        <Square id={r + "_" + c} value={this.state.squares[r][c]} onClick={() => this.handleOnClickSquare(r, c)}/>
 
                     </React.Fragment>))}
             </div>));
@@ -118,6 +180,13 @@ class Game extends React.Component {
                         </div>
 
                         <RestartButton onClick={this.handleClickRestartButton}/>
+
+                        <MoveHistory data={this.state.historyMoves}
+                                     resetTable={this.resetTable}
+                                     currentSelected={this.state.currentSelected}
+                                     setCurrentSelected={this.setCurrentSelected}
+                        />
+
                     </div>
                 </div>
             </div>
