@@ -1,18 +1,18 @@
 import React from 'react';
 import '../index.css';
 
-export default function Square({ id, value, onClick }) {
-    // console.log("rerender square");
-
-    const textColor = value === "X" ?  "blue" : "red";
-
-    return (
-        <button type="button" className="square" id={id} onClick={onClick}>
+const Square = React.memo(({ id, value, onClick }) => {
+  const textColor = value === 'X' ? 'blue' : 'red';
+  return (
+    <button type="button" className="square" id={id} onClick={onClick}>
             <span style={{
-                color: textColor
+              color: textColor
             }}>
                 {value}
             </span>
-        </button>
-    );
-}
+    </button>
+  );
+}, (prevProps, nextProps) => {
+  return (prevProps.id === nextProps.id && prevProps.value === nextProps.value);
+});
+export default Square;

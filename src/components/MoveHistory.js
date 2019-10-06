@@ -1,6 +1,6 @@
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import React from 'react';
+import React, {useMemo} from 'react';
 import '../index.css';
 
 const NoDataComponent = (props) => {
@@ -14,49 +14,52 @@ const NoDataComponent = (props) => {
 };
 
 export default function MoveHistory(props) {
-
-  const columns = [{
-    Header: () => (
-      <span>
+  const MemoizedColumns = useMemo(() => {
+    return (
+      [{
+        Header: () => (
+          <span>
                 Lượt
                 <i className="fa fa-sort" style={{ float: 'right' }}/>
             </span>
-    ),
-    accessor: 'id'
-  }, {
-    Header: 'Người chơi',
-    accessor: 'symbol',
-    Cell: cell => <span className='number' style={{ color: cell.value === 'X' ? 'blue' : 'red' }}>
+        ),
+        accessor: 'id'
+      }, {
+        Header: 'Người chơi',
+        accessor: 'symbol',
+        Cell: cell => <span className='number' style={{ color: cell.value === 'X' ? 'blue' : 'red' }}>
                             {cell.value}
                         </span>,
-    sortable: false,
-    filterable: false
-  }, {
-    Header: () => (
-      <span>
+        sortable: false,
+        filterable: false
+      }, {
+        Header: () => (
+          <span>
                 Hàng
                 <i className="fa fa-sort" style={{ float: 'right' }}/>
             </span>
-    ),
-    accessor: 'row'
-  }, {
-    Header: () => (
-      <span>
+        ),
+        accessor: 'row'
+      }, {
+        Header: () => (
+          <span>
                 Cột
                 <i className="fa fa-sort" style={{ float: 'right' }}/>
              </span>
-    ),
-    accessor: 'column'
-  }, {
-    Header: 'Reset',
-    Cell: (cellInfo) =>
-      <button type="button" style={{ width: '60%', height: '105%' }}
-              onClick={() =>  props.resetTable(cellInfo.index)}>
-        {'\u21BB'}
-      </button>,
-    sortable: false,
-    filterable: false
-  }];
+        ),
+        accessor: 'column'
+      }, {
+        Header: 'Reset',
+        Cell: (cellInfo) =>
+          <button type="button" style={{ width: '60%', height: '105%' }}
+                  onClick={() =>  props.resetTable(cellInfo.index)}>
+            {'\u21BB'}
+          </button>,
+        sortable: false,
+        filterable: false
+      }]
+    );
+  }, [props]);
 
   return (
     <div className="move-history">
@@ -67,7 +70,7 @@ export default function MoveHistory(props) {
 
       <ReactTable style={{ height: '410px', border: '1px solid #c79e71' }}
                   data={props.data}
-                  columns={columns}
+                  columns={MemoizedColumns}
                   noDataText=""
                   defaultPageSize={400}
                   NoDataComponent={NoDataComponent}
