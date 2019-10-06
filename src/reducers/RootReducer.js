@@ -1,5 +1,5 @@
 import { ActionConstant, NO_OF_COL, NO_OF_ROW } from '../utils/Constants';
-import { checkWinCondition } from '../utils/GameCheckUtil';
+import { checkWinCondition, resetColor } from '../utils/GameCheckUtil';
 
 const initialState = {
   baseRow: [],
@@ -79,12 +79,6 @@ export default function rootReducer(state = initialState, action){
     case ActionConstant.INIT_BOARD:
       return initBoard(state);
 
-     case ActionConstant.INC_TOTAL_CHECKED:
-       return {
-         ...state,
-         totalChecked: state.totalChecked + 1
-       };
-
     case ActionConstant.SET_CURRENT_SELECTED:
       return {
         ...state,
@@ -105,13 +99,16 @@ export default function rootReducer(state = initialState, action){
       };
 
     case ActionConstant.RESET_TABLE:
+      resetColor();
+
       return {
         ...state,
         squares: state.historySquares[action.index],
         isXNext: action.index % 2 === 1,
         currentTurn: action.index + 1,
         currentSelected: action.index,
-        totalChecked: action.index + 1
+        totalChecked: action.index + 1,
+        win: false
       };
 
     case ActionConstant.ON_CLICK_SQUARE:

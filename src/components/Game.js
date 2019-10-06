@@ -1,11 +1,9 @@
-import { connect } from 'react-redux';
 import React from 'react';
 import '../index.css';
-import RestartButton from './RestartButton';
-import MoveHistory from './MoveHistory';
+import RestartButton from './RestartButton'
 import Square from './Square';
-import { isBoardFull } from '../utils/GameCheckUtil';
-import {initBoard, resetBoard, setCurrentSelected, resetTable, onClickSquare} from '../actions/Actions';
+import { isBoardFull, resetColor } from '../utils/GameCheckUtil';
+import MoveHistoryContainer from '../containers/MoveHistoryContainer';
 
 class Game extends React.Component {
 
@@ -40,10 +38,7 @@ class Game extends React.Component {
     const rows = document.getElementsByClassName('rt-tr-group');
     rows[0].scrollIntoView(false);
 
-    const cells = document.getElementsByClassName('square');
-
-    for (let i = 0; i < cells.length; i++)
-      cells[i].style.backgroundColor = '#eff1bc';
+    resetColor();
   }
 
   handleOnClickSquare(i, j) {
@@ -91,8 +86,7 @@ class Game extends React.Component {
 
             <RestartButton onClick={this.handleClickRestartButton}/>
 
-            <MoveHistory />
-
+            <MoveHistoryContainer />
           </div>
         </div>
       </div>
@@ -100,27 +94,4 @@ class Game extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    BASE_ROW: state.baseRow,
-    BASE_COL: state.baseColumn,
-
-    squares: state.squares,
-    isXNext: state.isXNext,
-    totalChecked: state.totalChecked,
-    win: state.win,
-    currentSelected: state.currentSelected,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    initBoard: () => dispatch(initBoard()),
-    resetBoard: () => dispatch(resetBoard()),
-    setCurrentSelected: (val) => dispatch(setCurrentSelected(val)),
-    resetTable: () => dispatch(resetTable()),
-    onClickSquare: (i, j) => dispatch(onClickSquare(i, j)),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default Game;

@@ -1,9 +1,7 @@
-import { connect } from 'react-redux';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import React from 'react';
 import '../index.css';
-import { resetTable, setCurrentSelected } from '../actions/Actions';
 
 const NoDataComponent = (props) => {
   return props.children === '' ?
@@ -15,7 +13,7 @@ const NoDataComponent = (props) => {
     );
 };
 
-function MoveHistory(props) {
+export default function MoveHistory(props) {
 
   const columns = [{
     Header: () => (
@@ -108,20 +106,3 @@ function MoveHistory(props) {
     </div>
   );
 }
-
-function mapStateToProps(state) {
-  return {
-    data : state.historyMoves,
-    currentSelected : state.currentSelected,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    setCurrentSelected: (val) => dispatch(setCurrentSelected(val)),
-    resetTable: () => dispatch(resetTable())
-  };
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(MoveHistory);

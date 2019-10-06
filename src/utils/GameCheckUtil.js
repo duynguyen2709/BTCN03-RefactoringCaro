@@ -13,6 +13,13 @@ function highlight(arr, currentSymbol){
     }
 }
 
+function resetColor(){
+    const cells = document.getElementsByClassName('square');
+
+    for (let i = 0; i < cells.length; i++)
+        cells[i].style.backgroundColor = '#eff1bc';
+}
+
 function checkWinCondition(squares, i, j) {
 
     const currentSymbol = squares[i][j];
@@ -289,4 +296,4 @@ function isBoardFull(totalChecked) {
     return totalChecked >= NO_OF_ROW * NO_OF_COL;
 }
 
-export {checkWinCondition, isBoardFull};
+export {checkWinCondition, resetColor, isBoardFull};
