@@ -1,9 +1,9 @@
 import React from 'react';
 import '../index.css';
-import RestartButton from './RestartButton'
-import Square from './Square';
+import RestartButton from './RestartButton';
 import { isBoardFull, resetColor } from '../utils/GameCheckUtil';
 import MoveHistoryContainer from '../containers/MoveHistoryContainer';
+import Board from './Board';
 
 class Game extends React.Component {
 
@@ -13,7 +13,6 @@ class Game extends React.Component {
     this.handleClickRestartButton = this.handleClickRestartButton.bind(this);
     this.handleOnClickSquare = this.handleOnClickSquare.bind(this);
     this.getStatus = this.getStatus.bind(this);
-    this.renderBoard = this.renderBoard.bind(this);
 
     props.initBoard();
   }
@@ -56,27 +55,15 @@ class Game extends React.Component {
     }
   }
 
-  renderBoard() {
-    return this.props.BASE_ROW.map((r) => (
-
-      <div key={`r${r}`}
-           className="board-row">
-
-        {this.props.BASE_COL.map((c) =>
-          (<React.Fragment key={`c${c}`}>
-
-            <Square id={`${r}_${c}`} value={this.props.squares[r][c]} onClick={() => this.handleOnClickSquare(r, c)}/>
-
-          </React.Fragment>))}
-      </div>));
-  }
-
   render() {
     return (
       <div className="container">
         <div className="game">
           <div className="game-board">
-            {this.renderBoard()}
+            <Board row={this.props.BASE_ROW}
+                   column={this.props.BASE_COL}
+                   squares={this.props.squares}
+                   handleOnClickSquare={this.handleOnClickSquare} />
           </div>
 
           <div>
