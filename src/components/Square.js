@@ -1,7 +1,7 @@
 import React from 'react';
 import '../index.css';
 
-export default  function Square({ id, value, onClick }) {
+export default function Square({ id, value, onClick }) {
 
     const textColor = value === "X" ?  "blue" : "red";
 

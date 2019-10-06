@@ -1,18 +1,17 @@
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import React from 'react';
-import './index.css';
-import RestartButton from './components/RestartButton';
-import MoveHistory from './components/MoveHistory';
-import Square from './components/Square';
-import { checkWinCondition, isBoardFull } from './utils/GameCheckUtil';
-import { NO_OF_ROW, NO_OF_COL } from './utils/Constants';
+import '../index.css';
+import RestartButton from './RestartButton';
+import MoveHistory from './MoveHistory';
+import Square from './Square';
+import { checkWinCondition, isBoardFull } from '../utils/GameCheckUtil';
+import { NO_OF_ROW, NO_OF_COL, ActionConstant } from '../utils/Constants';
 
 class Game extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.BASE_ROW = [];
-    this.BASE_COL = [];
 
     this.state = {
       squares: Array(NO_OF_ROW).fill(Array(NO_OF_COL).fill(null)),
@@ -32,7 +31,7 @@ class Game extends React.Component {
     this.renderBoard = this.renderBoard.bind(this);
     this.setCurrentSelected = this.setCurrentSelected.bind(this);
 
-    this.init();
+    props.init();
   }
 
   setCurrentSelected(select) {
@@ -97,7 +96,7 @@ class Game extends React.Component {
 
     this.state.historyMoves.push(elementClicked);
 
-    const {squares} = this.state;
+    const { squares } = this.state;
     const newArray = squares.map(arr => arr.slice());
     newArray[i][j] = currentSymbol;
 
@@ -131,13 +130,6 @@ class Game extends React.Component {
     }
   }
 
-  init() {
-    for (let i = 0; i < NO_OF_ROW; i++) {
-      this.BASE_COL.push(i);
-      this.BASE_ROW.push(i);
-    }
-  }
-
   resetTable(index) {
     const { historySquares } = this.state;
     this.setState({
@@ -150,12 +142,12 @@ class Game extends React.Component {
   }
 
   renderBoard() {
-    return this.BASE_ROW.map((r) => (
+    return this.props.BASE_ROW.map((r) => (
 
       <div key={`r${r}`}
            className="board-row">
 
-        {this.BASE_COL.map((c) =>
+        {this.props.BASE_COL.map((c) =>
           (<React.Fragment key={`c${c}`}>
 
             <Square id={`${r}_${c}`} value={this.state.squares[r][c]} onClick={() => this.handleOnClickSquare(r, c)}/>
@@ -192,4 +184,18 @@ class Game extends React.Component {
   }
 }
 
-export default Game;
+function mapStateToProps(state) {
+  return {
+    BASE_ROW: state.baseRow,
+    BASE_COL: state.baseColumn
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    init: () => dispatch({ type: ActionConstant.INIT_BOARD })
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
