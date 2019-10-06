@@ -1,7 +1,9 @@
+import { connect } from 'react-redux';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import React from 'react';
 import '../index.css';
+import { resetTable, setCurrentSelected } from '../actions/Actions';
 
 const NoDataComponent = (props) => {
   return props.children === '' ?
@@ -13,7 +15,7 @@ const NoDataComponent = (props) => {
     );
 };
 
-export default function MoveHistory(props) {
+function MoveHistory(props) {
 
   const columns = [{
     Header: () => (
@@ -51,17 +53,13 @@ export default function MoveHistory(props) {
     Header: 'Reset',
     Cell: (cellInfo) =>
       <button type="button" style={{ width: '60%', height: '105%' }}
-              onClick={() => {
-                const { resetTable } = this.props;
-                resetTable(cellInfo.index);
-              }}>
+              onClick={() =>  props.resetTable(cellInfo.index)}>
         {'\u21BB'}
       </button>,
     sortable: false,
     filterable: false
   }];
 
-  const { data, currentSelected, setCurrentSelected } = props;
   return (
     <div className="move-history">
 
@@ -70,7 +68,7 @@ export default function MoveHistory(props) {
       </p>
 
       <ReactTable style={{ height: '410px', border: '1px solid #c79e71' }}
-                  data={data}
+                  data={props.data}
                   columns={columns}
                   noDataText=""
                   defaultPageSize={400}
@@ -82,14 +80,14 @@ export default function MoveHistory(props) {
                     if (typeof rowInfo !== 'undefined') {
                       return {
                         onClick: (e, handleOriginal) => {
-                          setCurrentSelected(rowInfo.index);
+                          props.setCurrentSelected(rowInfo.index);
                           if (handleOriginal) {
                             handleOriginal();
                           }
                         },
                         style: {
-                          background: rowInfo.index === currentSelected ? '#eca75b' : '',
-                          color: rowInfo.index === currentSelected ? 'white' : ''
+                          background: rowInfo.index === props.currentSelected ? '#eca75b' : '',
+                          color: rowInfo.index === props.currentSelected ? 'white' : ''
                         }
                       };
                     }
@@ -109,5 +107,21 @@ export default function MoveHistory(props) {
       />
     </div>
   );
-
 }
+
+function mapStateToProps(state) {
+  return {
+    data : state.historyMoves,
+    currentSelected : state.currentSelected,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setCurrentSelected: (val) => dispatch(setCurrentSelected(val)),
+    resetTable: () => dispatch(resetTable())
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(MoveHistory);
